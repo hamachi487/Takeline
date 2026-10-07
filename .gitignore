@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+build/
+dist/
+vendor/
+*.spec.bak
+tests/real_samples/*
+!tests/real_samples/README.md
+!tests/real_samples/*.expected.json

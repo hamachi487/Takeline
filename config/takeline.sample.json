@@ -1,0 +1,23 @@
+{
+  "_comment": "Copy to %APPDATA%\\Takeline\\settings.json (the app writes this file itself when you change Settings).",
+  "tz_mode": "auto",
+  "tz_zone": "America/Sao_Paulo",
+  "naive_is_utc": false,
+  "template": "{DEVICE}-{YYYY}-{MM}-{DD}-{HH}{MIN}{SEC}{SUFFIX}.{EXT}",
+  "suffix_format": "-{n:02d}",
+  "ext_case": "preserve",
+  "include_subfolders": true,
+  "unknown_threshold": 0.6,
+  "allow_filename_dates": true,
+  "allow_filesystem_fallback": true,
+  "use_exiftool": true,
+  "exiftool_path": "",
+  "developer_mode": false,
+  "device_profiles": {
+    "_comment": "Optional per-device timestamp rules, merged over the built-in defaults.",
+    "DJI": {
+      "preferred": ["ExifIFD:DateTimeOriginal", "XMP-exif:DateTimeOriginal"],
+      "quicktime_header_local": false
+    }
+  }
+}

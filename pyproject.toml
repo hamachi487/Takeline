@@ -1,0 +1,23 @@
+[project]
+name = "takeline"
+version = "1.0.0"
+description = "Rename photos and videos by their real capture time (Windows)."
+requires-python = ">=3.10"
+dependencies = ["PySide6-Essentials>=6.6,<7", "tzdata>=2024.1"]
+
+[project.scripts]
+takeline = "takeline.cli:main"
+
+[project.gui-scripts]
+takeline-gui = "takeline.app:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

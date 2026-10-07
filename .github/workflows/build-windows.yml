@@ -1,0 +1,54 @@
+# Builds Takeline.exe on GitHub's Windows machines.
+# Push this project to a GitHub repository, open the Actions tab, run "Build Windows app",
+# then download the exe from the run's Artifacts. No local Python needed.
+name: Build Windows app
+on:
+  workflow_dispatch:
+    inputs:
+      bundle_exiftool:
+        description: "Bundle ExifTool"
+        type: boolean
+        default: false
+  push:
+    tags: ["v*"]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: windows-latest
+            arch: x64
+            experimental: false
+          - runner: windows-11-arm
+            arch: arm64
+            experimental: true      # native ARM64 build; the x64 exe also runs on ARM via emulation
+    runs-on: ${{ matrix.runner }}
+    continue-on-error: ${{ matrix.experimental }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          architecture: ${{ matrix.arch }}
+      - name: Install dependencies
+        run: python -m pip install -r requirements-dev.txt
+      - name: Test
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: python -m pytest
+      - name: Build
+        shell: pwsh
+        run: |
+          $args = @("-SkipTests")
+          if ("${{ inputs.bundle_exiftool }}" -eq "true") { $args += "-WithExifTool" }
+          ./build_windows.ps1 @args
+      - name: Rename for architecture
+        shell: pwsh
+        run: |
+          if ("${{ matrix.arch }}" -eq "arm64") { Rename-Item dist/Takeline.exe Takeline-arm64.exe }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Takeline-${{ matrix.arch }}
+          path: dist/*.exe
