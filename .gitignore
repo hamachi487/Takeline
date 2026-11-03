@@ -8,3 +8,4 @@ vendor/
 tests/real_samples/*
 !tests/real_samples/README.md
 !tests/real_samples/*.expected.json
+.venv-cli/
