@@ -27,6 +27,16 @@ To produce that exe, pick one:
 2. **On a Windows PC.** Install Python 3.10+ (64-bit, from python.org), then double-click **`build_windows.bat`**. It creates a private virtual environment, runs the tests and writes `dist\Takeline.exe`. Use `build_windows.bat -WithExifTool` to bundle ExifTool. If [Inno Setup 6](https://jrsoftware.org/isinfo.php) is installed it also writes `dist\Takeline-Setup.exe`.
 3. **Run from source** (developers): after step 2 has created `.venv`, `run_dev.bat`, or `python -m takeline` with `PYTHONPATH=src`.
 
+**Linux (command line).** `./build_linux.sh` (Python 3.10+ with `venv`) runs the tests and writes `dist/takeline`, a self-contained binary of the CLI below; no Qt is needed. Or run **Actions → Build Linux CLI** for x64 and arm64 builds. ExifTool is used if it is on `PATH` (e.g. `apt install libimage-exiftool-perl`).
+
+```
+takeline scan ~/Clips                         # dry-run preview table, changes nothing
+takeline apply ~/Clips --copy-to ~/Sorted     # renamed copies, originals untouched
+takeline apply ~/Clips --rename --yes         # rename in place (undo record written first)
+takeline undo                                 # revert the last rename
+takeline inspect ~/Clips/IMG_4821.MOV         # all metadata and the reasoning for one file
+```
+
 **ARM64.** The x64 exe runs on Windows 11 on ARM through emulation. The GitHub workflow also attempts a native ARM64 build (`Takeline-arm64`, marked experimental because it depends on PySide6 publishing Windows-ARM64 wheels for the pinned version).
 
 **SmartScreen / antivirus.** Unsigned PyInstaller executables sometimes trigger "Windows protected your PC" or antivirus false positives. Signing the exe with a code-signing certificate (`signtool sign ...`) resolves this for distribution. UPX compression is disabled because it makes false positives more likely.
@@ -204,7 +214,7 @@ python -m takeline inspect "D:\Clips\video-277_singular_display.MOV"
 python -m takeline scan "D:\Clips"            # dry-run preview table, changes nothing
 ```
 
-(The developer CLI runs from source; the packaged exe is the windowed app.)
+(On Windows the developer CLI runs from source; the packaged exe is the windowed app. On Linux, `build_linux.sh` packages it as `dist/takeline`.)
 
 ---
 
@@ -223,6 +233,7 @@ src/takeline/
   app.py, cli.py, config.py
 tests/           pytest suite + builders + real_samples/
 takeline.spec, build_windows.bat/.ps1, installer/Takeline.iss, .github/workflows/build-windows.yml
+takeline-cli.spec, build_linux.sh, .github/workflows/build-linux.yml
 config/takeline.sample.json
 ```
 
